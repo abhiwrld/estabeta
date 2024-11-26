@@ -90,7 +90,7 @@ const Assistant = () => {
 
         try {
             const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-            const model = fileContents.length > 0 ? "gpt-4o-mini" : "o1-preview";
+            const model = fileContents.length > 0 ? "gpt-4o" : "gpt-4o";
             const requestBody = {
                 model,
                 messages: [
