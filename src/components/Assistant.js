@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/legacy/build/pdf.worker.entry'; // Import the worker
-import './estabeta/src/styles/Assistant.css'; // Assuming you have styles in this file
+import ("./estabeta/src/styles/Assistant.css"); // Assuming you have styles in this file
 
 // Configure PDF.js to use the imported worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
