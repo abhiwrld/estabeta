@@ -1,0 +1,197 @@
+/* General Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica';
+    background-color: #121212; /* Dark theme background */
+    color: #e0e0e0; /* Light text for dark mode */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main Container */
+.resonance-container {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #1e1e1e; /* Slightly lighter dark for contrast */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Title */
+.title {
+    font-size: 2rem;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Chat Window */
+.chat-window {
+    width: 100%;
+    height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #333;
+    background-color: #252525;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Message Bubble Styles */
+.message {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    font-size: 0.95rem;
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: #4caf50;
+    color: #fff;
+    text-align: right;
+}
+
+.message.assistant {
+    align-self: flex-start;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+}
+
+/* Typing Indicator */
+.typing-indicator p {
+    font-style: italic;
+    color: #999;
+    margin: 0;
+    display: inline-block;
+}
+
+.typing-indicator .dot1, 
+.typing-indicator .dot2, 
+.typing-indicator .dot3 {
+    animation: blink 1.5s infinite;
+    font-size: 1.2em;
+    margin-left: 2px;
+}
+
+.typing-indicator .dot2 {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator .dot3 {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Chat Input Section */
+.chat-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Text Input */
+.chat-form input[type="text"] {
+    flex: 1;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.chat-form input[type="text"]::placeholder {
+    color: #888888;
+}
+
+/* Send Button */
+.chat-form button {
+    background-color: #4caf50;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.chat-form button:disabled {
+    background-color: #777;
+    cursor: not-allowed;
+}
+
+.chat-form button:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+/* File Upload Button */
+.chat-form .file-upload label {
+    font-size: 1.5rem;
+    color: #888888;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: inline-block;
+    line-height: 1;
+}
+
+.chat-form .file-upload label:hover {
+    color: #ffffff;
+}
+
+.chat-form .file-upload input {
+    display: none; /* Hide the default file input */
+}
+
+/* Demo Prompts Section */
+.demo-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.prompt {
+    padding: 10px 20px;
+    background-color: #333;
+    border: 1px solid #4caf50;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.prompt:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
