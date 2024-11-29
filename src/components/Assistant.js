@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -14,15 +14,19 @@ const Assistant = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [fileContents, setFileContents] = useState([]);
+    const [fileStatus, setFileStatus] = useState('');
 
-    const systemLikeMessage = {
-        role: 'user',
-        content: 'You are a highly advanced AI legal assistant designed to help lawyers enhance their research, draft contracts, prepare cases, and improve their overall efficiency as per Indian Law. Your primary responsibilities include: Legal Research: Provide accurate and up-to-date information on laws, regulations, case law, and legal precedents. Additionally, utilize the information from the three supplementary files provided to offer insights beyond the cutoff date. Document Drafting: Assist in drafting legal documents such as contracts, briefs, memos, and motions, ensuring they adhere to proper legal standards and terminology. Case Preparation: Offer insights on legal strategies, analyze case details, and help organize case materials. Professional Communication: Communicate in a clear, precise, and professional manner appropriate for legal professionals. You also have to cite relevant sources or any sections/acts that you will use as per indian law and constitution/ipc/bns.'
-    }
+    const systemLikeMessage = useMemo(
+        () => ({
+            role: 'user',
+            content: `You are a highly advanced AI legal assistant designed to help lawyers enhance their research, draft contracts, prepare cases, and improve their overall efficiency as per Indian Law. Your primary responsibilities include: Legal Research: Provide accurate and up-to-date information on laws, regulations, case law, and legal precedents. Additionally, utilize the information from the three supplementary files provided to offer insights beyond the cutoff date. Document Drafting: Assist in drafting legal documents such as contracts, briefs, memos, and motions, ensuring they adhere to proper legal standards and terminology. Case Preparation: Offer insights on legal strategies, analyze case details, and help organize case materials. Professional Communication: Communicate in a clear, precise, and professional manner appropriate for legal professionals. You also have to cite relevant sources or any sections/acts that you will use as per Indian law and constitution/IPC/BNS.`,
+        }),
+        [] // Empty dependency array ensures this object is memoized and never changes
+    );
 
     useEffect(() => {
         setConversation([systemLikeMessage]);
-    }, []);
+    }, [systemLikeMessage]);
 
     const demoPrompts = [
         'What are the key elements of a contract?',
@@ -64,7 +68,9 @@ const Assistant = () => {
         if (!files) return;
 
         setError('');
+        setFileStatus(''); // Clear previous status
         const newFileContents = [];
+        const uploadedFileNames = [];
 
         try {
             for (const file of files) {
@@ -73,9 +79,11 @@ const Assistant = () => {
                 if (fileExtension === 'txt') {
                     const content = await readTxtFile(file);
                     newFileContents.push(content);
+                    uploadedFileNames.push(file.name);
                 } else if (fileExtension === 'pdf') {
                     const content = await readPdfFile(file);
                     newFileContents.push(content);
+                    uploadedFileNames.push(file.name);
                 } else {
                     setError('Unsupported file type. Please upload .txt or .pdf files.');
                     return;
@@ -83,9 +91,20 @@ const Assistant = () => {
             }
 
             setFileContents((prev) => [...prev, ...newFileContents]);
+            setFileStatus(`File(s) uploaded successfully: ${uploadedFileNames.join(', ')}`);
+
+            setTimeout (() => {
+                setFileStatus('');
+            }, 5000);
+
         } catch (err) {
             console.error('File upload error:', err);
-            setError(err.message);
+            setFileStatus('');
+            setError(`Failed to process files: ${err.message}`);
+
+            setTimeout (() => {
+                setFileStatus('');
+            }, 5000);
         }
     };
 
@@ -189,7 +208,8 @@ const Assistant = () => {
                 ))}
             </div>
 
-            {error && <div className="error">{error}</div>}
+            {fileStatus && <div className="file-status">{fileStatus}</div>}
+            {error && <div className="file-status error">{error}</div>}
         </div>
     );
 };
