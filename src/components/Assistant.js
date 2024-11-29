@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/legacy/build/pdf.worker.entry'; // Import the worker
-import '../styles/Assistant.css'; // Assuming you have styles in this file
+import '/Users/abhiwrld/estabeta/src/styles/Assistant.css'; // Assuming you have styles in this file
 
 // Configure PDF.js to use the imported worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
@@ -14,6 +14,15 @@ const Assistant = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [fileContents, setFileContents] = useState([]);
+
+    const systemLikeMessage = {
+        role: 'user',
+        content: 'You are a highly advanced AI legal assistant designed to help lawyers enhance their research, draft contracts, prepare cases, and improve their overall efficiency as per Indian Law. Your primary responsibilities include: Legal Research: Provide accurate and up-to-date information on laws, regulations, case law, and legal precedents. Additionally, utilize the information from the three supplementary files provided to offer insights beyond the cutoff date. Document Drafting: Assist in drafting legal documents such as contracts, briefs, memos, and motions, ensuring they adhere to proper legal standards and terminology. Case Preparation: Offer insights on legal strategies, analyze case details, and help organize case materials. Professional Communication: Communicate in a clear, precise, and professional manner appropriate for legal professionals. You also have to cite relevant sources or any sections/acts that you will use as per indian law and constitution/ipc/bns.'
+    }
+
+    useEffect(() => {
+        setConversation([systemLikeMessage]);
+    }, []);
 
     const demoPrompts = [
         'What are the key elements of a contract?',
@@ -94,10 +103,11 @@ const Assistant = () => {
             const requestBody = {
                 model,
                 messages: [
-                    ...conversation,
+                    systemLikeMessage,
+                    ...conversation.slice(1),
                     userMessage,
                     ...(fileContents.length > 0
-                        ? [{ role: 'system', content: `Uploaded file contents: ${fileContents.join('\n')}` }]
+                        ? [{ role: 'user', content: `Uploaded file contents: ${fileContents.join('\n')}` }]
                         : []),
                 ],
                 temperature: fileContents.length > 0 ? 0.7 : 1,
@@ -133,7 +143,9 @@ const Assistant = () => {
         <div className="resonance-container">
             <h1 className="title">Estavel Law - Legal AI Assistant</h1>
             <div className="chat-window">
-                {conversation.map((message, index) => (
+                {conversation
+                .filter((message, index) => index !== 0)
+                .map((message, index) => (
                     <div key={index} className={`message ${message.role}`}>
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
                     </div>
