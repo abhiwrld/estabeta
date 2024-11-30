@@ -151,7 +151,7 @@ const Assistant = () => {
             }
         } catch (err) {
             console.error('API error:', err);
-            setError('An error occurred while connecting to the OpenAI API.');
+            setError('An error occurred.');
         } finally {
             setLoading(false);
             setInput(''); // Clear input after submission
